@@ -4,14 +4,6 @@ const userController = {
   // GET all users
   getAllUsers(req, res) {
     User.find({})
-      .populate({
-        path: 'thoughts',
-        select: '-__v'
-      })
-      .populate({
-        path: 'friends',
-        select: '-__v'
-      })
       .select('-__v')
       .sort({ _id: -1 })
       .then(dbUserData => res.json(dbUserData))
@@ -26,11 +18,11 @@ const userController = {
     User.findOne({ _id: params.userId })
       .populate({
         path: 'thoughts',
-        select: '-__v'
+        select: '-__v -username'
       })
       .populate({
         path: 'friends',
-        select: '-__v'
+        select: '-__v -thoughts'
       })
       .select('-__v')
       .then(dbUserData => {
@@ -101,12 +93,12 @@ const userController = {
     console.log(params);
     User.findOneAndUpdate(
       { _id: params.userId },
-      { $pull: { friends: { _id: params.friendId } } },
+      { $pull: { friends: params.friendId } },
       { new: true }
     )
       .populate({
         path: 'friends',
-        select: '-__v'
+        select: '-__v -thoughts'
       })
       .select('-__v')
       .then(dbUserData => res.json(dbUserData))
