@@ -4,11 +4,15 @@ const userController = {
   // GET all users
   getAllUsers(req, res) {
     User.find({})
-      // .populate({
-      //   path: 'comments',
-      //   select: '-__v'
-      // })
-      // .select('-__v')
+      .populate({
+        path: 'thoughts',
+        select: '-__v'
+      })
+      .populate({
+        path: 'friends',
+        select: '-__v'
+      })
+      .select('-__v')
       .sort({ _id: -1 })
       .then(dbUserData => res.json(dbUserData))
       .catch(err => {
@@ -20,11 +24,15 @@ const userController = {
   // GET a single user by its _id and populated thought and friend data
   getUserById({ params }, res) {
     User.findOne({ _id: params.userId })
-      // .populate({
-      //   path: 'comments',
-      //   select: '-__v'
-      // })
-      // .select('-__v')
+      .populate({
+        path: 'thoughts',
+        select: '-__v'
+      })
+      .populate({
+        path: 'friends',
+        select: '-__v'
+      })
+      .select('-__v')
       .then(dbUserData => {
         if (!dbUserData) {
           res.status(404).json({ message: 'No user found with this id!' });
@@ -66,7 +74,7 @@ const userController = {
           res.status(404).json({ message: 'No user found with this id!' });
           return;
         }
-        res.json(dbUserData);
+        res.json({ message: 'User and associated thoughts deleted!' });
       })
       .catch(err => res.status(400).json(err));
   },
@@ -75,7 +83,7 @@ const userController = {
   addFriend({ params }, res) {
     User.findOneAndUpdate(
       { _id: params.userId },
-      { $push: { friends: params.friendId } },
+      { $push: { friends: { _id: params.friendId } } },
       { new: true }
     )
       .then(dbUserData => {
@@ -90,11 +98,17 @@ const userController = {
 
   // DELETE to remove a friend from a user's friend list
   removeFriend({ params }, res) {
+    console.log(params);
     User.findOneAndUpdate(
       { _id: params.userId },
       { $pull: { friends: { _id: params.friendId } } },
       { new: true }
     )
+      .populate({
+        path: 'friends',
+        select: '-__v'
+      })
+      .select('-__v')
       .then(dbUserData => res.json(dbUserData))
       .catch(err => res.json(err));
   },
