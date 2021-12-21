@@ -32,7 +32,7 @@ SO THAT my website can handle large amounts of unstructured data
 
 ## Walkthrough Video
 
-[Click here to watch a walkthrough video.](https://watch.screencastify.com/v/5uPNPzkKuCjE31NfQpZg)
+[Click here to watch a walkthrough video.](https://watch.screencastify.com/v/tOZmubNKzaBhBve9DVq5)
 
 [Click here to watch a brief follow-up video regarding the `Remove Reaction` operation.](https://watch.screencastify.com/v/OagaQKyj4q9B0WwKGX81)
 
